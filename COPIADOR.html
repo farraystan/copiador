@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases com Copiar e Adicionar</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            color: #000;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            border: none;
+        }
+        .add-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .add-container label {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="frase" readonly>
+        <button onclick="copiarFrase()">Copiar</button>
+    </div>
+
+    <div class="add-container">
+        <label for="newFrase">Adicione uma nova frase:</label>
+        <textarea id="newFrase" placeholder="Digite frases separadas por linhas e aperte Enter" onkeydown="adicionarFrase(event)"></textarea>
+    </div>
+
+    <script>
+        let frases = [];
+        let index = 0;
+
+        // Exibe a primeira frase ao carregar
+        document.getElementById('frase').value = frases[index] || '';
+
+        function copiarFrase() {
+            const fraseAtual = document.getElementById('frase');
+            fraseAtual.select();
+            document.execCommand('copy');
+
+            // Passa para a próxima frase
+            index = (index + 1) % frases.length;
+            fraseAtual.value = frases[index];
+        }
+
+        function adicionarFrase(event) {
+            const newFraseInput = document.getElementById('newFrase');
+            const novasFrases = newFraseInput.value.trim().split('\n'); // Divide o texto por linhas
+
+            if (event.key === "Enter" && novasFrases.length > 0) {
+                novasFrases.forEach(frase => {
+                    const fraseLimpa = frase.trim();
+                    if (fraseLimpa !== "") {
+                        frases.push(fraseLimpa); // Adiciona nova frase ao array
+                    }
+                });
+                newFraseInput.value = ''; // Limpa o campo de texto
+                index = 0; // Reinicia o índice
+                document.getElementById('frase').value = frases[index]; // Atualiza a frase exibida
+            }
+        }
+    </script>
+</body>
+</html>
